@@ -37,9 +37,7 @@ const MealResultPage = () => {
                         <p className="text-3xl font-black">{params.get('fat')}g</p>
                     </div>
                 </div>
-                <div className="p-6 bg-white/5 rounded-[24px] italic text-sm border border-white/5">
-                    "{params.get('advice')}"
-                </div>
+
             </div>
             <button onClick={() => window.history.back()} className="w-full h-14 bg-dark-green text-white font-bold rounded-[28px] shadow-lg active:scale-95 transition">Done</button>
         </div>

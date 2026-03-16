@@ -51,8 +51,9 @@ const AddMealPage: React.FC = () => {
         });
         navigate(`/meal_result?${queryParams.toString()}`);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      setErrorMsg(err.response?.data?.message || err.message || "Failed to connect to the server. Please check if the backend is running.");
     } finally {
       setIsLoading(false);
     }
@@ -79,11 +80,10 @@ const AddMealPage: React.FC = () => {
         <div className="flex gap-4 overflow-x-auto pb-2 -mx-2 px-2 scrollbar-none">
           {mealTypes.map((meal) => (
             <button
-               key={meal.name}
-               onClick={() => setSelectedMealType(meal.name)}
-               className={`flex-shrink-0 w-[90px] h-[100px] rounded-[20px] flex flex-col items-center justify-center gap-2 transition-all ${
-                 selectedMealType === meal.name ? 'bg-dark-green text-white shadow-lg' : 'bg-[#F5F5F5] text-dark-green'
-               }`}
+              key={meal.name}
+              onClick={() => setSelectedMealType(meal.name)}
+              className={`flex-shrink-0 w-[90px] h-[100px] rounded-[20px] flex flex-col items-center justify-center gap-2 transition-all ${selectedMealType === meal.name ? 'bg-dark-green text-white shadow-lg' : 'bg-[#F5F5F5] text-dark-green'
+                }`}
             >
               <span className="text-2xl">{meal.emoji}</span>
               <span className="text-[12px] font-bold">{meal.name}</span>
@@ -93,12 +93,12 @@ const AddMealPage: React.FC = () => {
 
         {/* Text Input */}
         <div className="space-y-4">
-           <textarea
-             value={mealInput}
-             onChange={e => setMealInput(e.target.value)}
-             placeholder="e.g. rice, chicken, apple"
-             className="w-full h-40 bg-white border border-slate-200 rounded-[16px] p-6 focus:ring-2 focus:ring-dark-green outline-none transition text-lg resize-none"
-           />
+          <textarea
+            value={mealInput}
+            onChange={e => setMealInput(e.target.value)}
+            placeholder="e.g. rice, chicken, apple"
+            className="w-full h-40 bg-white border border-slate-200 rounded-[16px] p-6 focus:ring-2 focus:ring-dark-green outline-none transition text-lg resize-none"
+          />
         </div>
 
         {/* Action Button */}

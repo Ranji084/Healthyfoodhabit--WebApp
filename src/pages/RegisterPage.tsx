@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authService } from '../api/services';
-import { UserPlus, Mail, Lock, User, Target, Loader2 } from 'lucide-react';
+import { Loader2, Eye, EyeOff } from 'lucide-react';
+import leftLogo from '../assets/left_logo.jpeg';
+import rightLogo from '../assets/right _logo.jpeg';
 
 const RegisterPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +12,7 @@ const RegisterPage: React.FC = () => {
     password: '',
     goal: 'Maintenance'
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -38,103 +41,113 @@ const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-3xl shadow-xl overflow-hidden">
-        <div className="p-8">
-          <div className="flex justify-center mb-6">
-            <div className="bg-green-100 p-4 rounded-full">
-              <UserPlus className="w-8 h-8 text-green-600" />
+    <div className="min-h-screen bg-white flex flex-col items-center p-6 font-sans">
+      {/* Top Logos */}
+      <div className="w-full max-w-md flex justify-between items-start mb-6">
+        <img src={leftLogo} alt="Left Logo" className="h-16 w-auto object-contain" />
+        <img src={rightLogo} alt="Right Logo" className="h-16 w-auto object-contain" />
+      </div>
+
+      <h1 className="text-2xl font-semibold text-[#1B5E20] mb-6">Healthy Food Habit</h1>
+
+      <div className="w-full max-w-md">
+        {/* Toggle Buttons */}
+        <div className="flex bg-white border border-gray-200 rounded-2xl mb-6 overflow-hidden shadow-sm">
+          <div className="flex-1 py-4 text-center font-medium bg-[#004D40] text-white">
+            Register
+          </div>
+          <Link
+            to="/login"
+            className="flex-1 py-4 text-center font-medium text-[#1B5E20] hover:bg-gray-50 transition"
+          >
+            Login
+          </Link>
+        </div>
+
+        {error && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl text-sm">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleRegister} className="space-y-4">
+          <div className="space-y-1">
+            <label className="block text-sm font-semibold text-[#1B5E20]">Full Name</label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              className="w-full px-4 py-3 bg-white border border-gray-300 rounded-2xl focus:ring-2 focus:ring-[#1B5E20] focus:border-transparent outline-none transition placeholder:text-gray-400"
+              placeholder="John Doe"
+              required
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="block text-sm font-semibold text-[#1B5E20]">Email Address</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full px-4 py-3 bg-white border border-gray-300 rounded-2xl focus:ring-2 focus:ring-[#1B5E20] focus:border-transparent outline-none transition placeholder:text-gray-400"
+              placeholder="you@example.com"
+              required
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="block text-sm font-semibold text-[#1B5E20]">Password</label>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-2xl focus:ring-2 focus:ring-[#1B5E20] focus:border-transparent outline-none transition placeholder:text-gray-400"
+                placeholder="Password"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
             </div>
           </div>
-          <h2 className="text-3xl font-bold text-center text-slate-800 mb-2">Create Account</h2>
-          <p className="text-center text-slate-500 mb-8">Start your healthy journey today</p>
 
-          {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl text-sm">
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleRegister} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Full Name</label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition"
-                  placeholder="John Doe"
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition"
-                  placeholder="name@example.com"
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Password</label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition"
-                  placeholder="••••••••"
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Health Goal</label>
-              <div className="relative">
-                <Target className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                <select
-                  name="goal"
-                  value={formData.goal}
-                  onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition appearance-none"
-                >
-                  <option value="Weight Loss">Weight Loss</option>
-                  <option value="Maintenance">Maintenance</option>
-                  <option value="Muscle Gain">Muscle Gain</option>
-                </select>
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl shadow-lg shadow-green-200 transition transform active:scale-95 disabled:opacity-70 flex items-center justify-center gap-2"
+          <div className="space-y-1">
+            <label className="block text-sm font-semibold text-[#1B5E20]">Health Goal</label>
+            <select
+              name="goal"
+              value={formData.goal}
+              onChange={handleChange}
+              className="w-full px-4 py-3 bg-white border border-gray-300 rounded-2xl focus:ring-2 focus:ring-[#1B5E20] focus:border-transparent outline-none transition appearance-none"
             >
-              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Sign Up'}
-            </button>
-          </form>
+              <option value="Weight Loss">Weight Loss</option>
+              <option value="Maintenance">Maintenance</option>
+              <option value="Muscle Gain">Muscle Gain</option>
+            </select>
+          </div>
 
-          <p className="mt-8 text-center text-slate-600">
-            Already have an account?{' '}
-            <Link to="/login" title="Login Page" className="text-green-600 hover:text-green-700 font-bold">Login</Link>
-          </p>
-        </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-[#4CAF50] hover:bg-[#43A047] text-white font-semibold py-4 rounded-3xl shadow-md transition transform active:scale-[0.98] disabled:opacity-70 flex items-center justify-center text-lg mt-4"
+          >
+            {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : 'Sign Up'}
+          </button>
+        </form>
+      </div>
+
+      {/* Footer */}
+      <div className="mt-8 pb-4">
+        <p className="text-xs text-gray-400 text-center">
+          2026©powered by Engineering
+        </p>
       </div>
     </div>
   );

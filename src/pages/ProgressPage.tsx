@@ -22,9 +22,9 @@ const ProgressPage: React.FC = () => {
 
   if (loading) return <div className="flex justify-center items-center h-screen"><div className="w-10 h-10 border-4 border-dark-green border-t-transparent rounded-full animate-spin"></div></div>;
 
-  const totals = data?.nutrition_totals || { protein: 0, carbs: 0, fat: 0, calories: 0 };
+
   const percentages = data?.nutrient_percentages || { protein_percent: 0, carbs_percent: 0, fat_percent: 0 };
-  
+
   const pieData = [
     { name: 'Protein', value: percentages.protein_percent, color: '#00C853' },
     { name: 'Carbs', value: percentages.carbs_percent, color: '#2E7D32' },
@@ -41,7 +41,7 @@ const ProgressPage: React.FC = () => {
     <div className="bg-white min-h-screen p-6 space-y-8 animate-fade-in pb-32">
       <header className="flex items-center gap-4">
         <button onClick={() => navigate(-1)} className="p-2 text-dark-green">
-            <ArrowLeft className="w-6 h-6" />
+          <ArrowLeft className="w-6 h-6" />
         </button>
         <h1 className="text-2xl font-bold text-dark-green uppercase">Health Insights</h1>
       </header>
@@ -71,8 +71,8 @@ const ProgressPage: React.FC = () => {
             </PieChart>
           </ResponsiveContainer>
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-            <span className="text-3xl font-black">{totals.calories?.toFixed(0) || 0}</span>
-            <span className="text-[10px] font-bold opacity-60 uppercase">Kcal Total</span>
+            <span className="text-4xl font-black">{data?.health_percentage || 0}%</span>
+            <span className="text-[10px] font-bold opacity-60 uppercase tracking-widest">Health Rank</span>
           </div>
         </div>
 
@@ -116,7 +116,7 @@ const ProgressPage: React.FC = () => {
           <span className="text-xl">🥗</span>
           <h2 className="text-lg font-bold text-dark-green uppercase">Today's Meals</h2>
         </div>
-        
+
         <div className="space-y-6">
           {Object.keys(breakdown).filter(key => breakdown[key].length > 0).map(key => (
             <div key={key} className="space-y-3">

@@ -115,10 +115,26 @@ const WellnessPage: React.FC = () => {
                         <Info className="w-5 h-5 shrink-0" />
                         {getWellnessScore() > 80 ? "Excellent habits! Keep up the consistency." : "Minor improvements can boost your energy levels."}
                     </div>
+
+                    <button 
+                        onClick={() => window.print()}
+                        className="w-full h-12 bg-white text-dark-green font-bold rounded-xl mt-4 print:hidden transition active:scale-95"
+                    >
+                        Download as PDF
+                    </button>
                 </div>
             </div>
         )}
       </div>
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media print {
+          body * { visibility: hidden; }
+          .bg-dark-green.rounded-\\[32px\\] { visibility: visible; position: absolute; left: 0; top: 0; width: 100%; height: auto; border-radius: 0; color: black !important; background: white !important; border: 1px solid #eee; }
+          .bg-dark-green.rounded-\\[32px\\] * { visibility: visible; color: black !important; }
+          .print\\:hidden { display: none !important; }
+        }
+      `}} />
     </div>
   );
 };

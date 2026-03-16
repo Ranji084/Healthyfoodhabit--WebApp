@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { authService } from '../api/services';
-import { Settings, Eye as Visibility, EyeOff as VisibilityOff, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
+import leftLogo from '../assets/left_logo.jpeg';
+import rightLogo from '../assets/right _logo.jpeg';
 
 const WelcomePage: React.FC = () => {
   const [isRegisterSelected, setIsRegisterSelected] = useState(false);
@@ -62,151 +64,150 @@ const WelcomePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 relative overflow-hidden">
-      {/* Background Gradients (simulating Brush.verticalGradient) */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#F5F5F5] to-white pointer-events-none" />
-      
-      <div className="max-w-md w-full relative z-10 space-y-8 animate-fade-in">
-        {/* Top Header */}
-        <div className="flex justify-between items-center px-2">
-            <div className="w-10" /> {/* Spacer */}
-            <h1 className="text-2xl font-bold text-center text-brand-green">Healthy Food Habit</h1>
-            <button className="p-2 text-dark-green transition hover:bg-green-50 rounded-full">
-                <Settings className="w-6 h-6" />
-            </button>
+    <div className="min-h-screen bg-white flex flex-col items-center p-6 relative">
+      <div className="max-w-md w-full flex flex-col items-center space-y-8 animate-fade-in flex-1">
+        {/* Top Logos */}
+        <div className="w-full flex justify-between items-start pt-4">
+          <img src={leftLogo} alt="Left Logo" className="h-20 w-auto object-contain" />
+          <img src={rightLogo} alt="Right Logo" className="h-20 w-auto object-contain" />
         </div>
 
-        {/* Logos (Placeholders for R.drawable.left_logo / right_logo) */}
-        <div className="flex justify-between px-4">
-          <div className="w-24 h-24 bg-dark-green/5 rounded-2xl flex items-center justify-center text-dark-green font-bold text-xs p-2 text-center">Left Logo</div>
-          <div className="w-24 h-24 bg-dark-green/5 rounded-2xl flex items-center justify-center text-dark-green font-bold text-xs p-2 text-center">Right Logo</div>
-        </div>
+        {/* Title */}
+        <h1 className="text-2xl font-bold text-[#1B5E20]">Healthy Food Habit</h1>
 
-        {/* Auth Toggle (Surface/clickable emulation) */}
-        <div className="bg-white rounded-[16px] h-14 flex p-1 shadow-sm border border-slate-100 items-stretch overflow-hidden">
-            <button 
-                onClick={() => setIsRegisterSelected(true)}
-                className={`flex-1 rounded-xl font-bold transition-all duration-300 ${isRegisterSelected ? 'bg-dark-green text-white shadow-md' : 'text-dark-green bg-transparent'}`}
-            >
-                Register
-            </button>
-            <button 
-                onClick={() => setIsRegisterSelected(false)}
-                className={`flex-1 rounded-xl font-bold transition-all duration-300 ${!isRegisterSelected ? 'bg-dark-green text-white shadow-md' : 'text-dark-green bg-transparent'}`}
-            >
-                Login
-            </button>
+        {/* Auth Toggle */}
+        <div className="w-full flex bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+          <button
+            onClick={() => setIsRegisterSelected(true)}
+            className={`flex-1 py-4 font-bold transition-all duration-300 ${isRegisterSelected ? 'bg-[#004D40] text-white shadow-md' : 'bg-transparent text-[#1B5E20]'}`}
+          >
+            Register
+          </button>
+          <button
+            onClick={() => setIsRegisterSelected(false)}
+            className={`flex-1 py-4 font-bold transition-all duration-300 ${!isRegisterSelected ? 'bg-[#004D40] text-white shadow-md' : 'bg-transparent text-[#1B5E20]'}`}
+          >
+            Login
+          </button>
         </div>
 
         {error && (
-            <div className="p-4 bg-red-50 border border-red-100 text-red-600 rounded-2xl text-sm font-medium animate-bounce text-center">
-                {error}
-            </div>
+          <div className="w-full p-4 bg-red-50 border border-red-100 text-red-600 rounded-2xl text-sm font-medium text-center">
+            {error}
+          </div>
         )}
 
         {/* Form Fields */}
-        <form onSubmit={handleAuth} className="space-y-6">
-            <div className="space-y-4">
-                <div className="space-y-2">
-                    <label className="text-sm font-bold text-dark-green ml-1 block">Email Address</label>
-                    <input 
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="you@example.com"
-                        className="w-full h-14 bg-white border border-slate-200 rounded-xl px-4 focus:ring-2 focus:ring-dark-green outline-none transition"
-                    />
-                </div>
+        <form onSubmit={handleAuth} className="w-full space-y-6">
+          <div className="space-y-4">
+            {isRegisterSelected && (
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-[#1B5E20] ml-1 block">Full Name</label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Full Name"
+                  className="w-full h-14 bg-white border border-gray-300 rounded-2xl px-4 focus:ring-2 focus:ring-[#1B5E20] outline-none transition"
+                />
+              </div>
+            )}
 
-                <div className="space-y-2">
-                    <label className="text-sm font-bold text-dark-green ml-1 block">Password</label>
-                    <div className="relative">
-                        <input 
-                            type={showPassword ? 'text' : 'password'}
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            placeholder="Password"
-                            className="w-full h-14 bg-white border border-slate-200 rounded-xl px-4 pr-12 focus:ring-2 focus:ring-dark-green outline-none transition"
-                        />
-                        <button 
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-dark-green"
-                        >
-                            {showPassword ? <Visibility className="w-5 h-5" /> : <VisibilityOff className="w-5 h-5" />}
-                        </button>
-                    </div>
-                </div>
-
-                {!isRegisterSelected && (
-                    <div className="flex justify-end pr-1">
-                        <button type="button" onClick={() => navigate('/forgot-password')} className="text-sm text-dark-green font-medium">Forgot Password?</button>
-                    </div>
-                )}
-
-                {isRegisterSelected && (
-                   <div className="space-y-4 pt-2 animate-in slide-in-from-top-2 duration-300">
-                    <div className="space-y-2">
-                        <label className="text-sm font-bold text-dark-green ml-1 block">Confirm Password</label>
-                        <input 
-                            type="password"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            placeholder="Confirm"
-                            className="w-full h-14 bg-white border border-slate-200 rounded-xl px-4 focus:ring-2 focus:ring-dark-green outline-none transition"
-                        />
-                    </div>
-                    <div className="space-y-2">
-                        <label className="text-sm font-bold text-dark-green ml-1 block">Full Name</label>
-                        <input 
-                            type="text"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            placeholder="Name"
-                            className="w-full h-14 bg-white border border-slate-200 rounded-xl px-4 focus:ring-2 focus:ring-dark-green outline-none transition"
-                        />
-                    </div>
-                    <div className="space-y-2">
-                        <label className="text-sm font-bold text-dark-green ml-1 block">Age</label>
-                        <input 
-                            type="number"
-                            value={age}
-                            onChange={(e) => setAge(e.target.value)}
-                            placeholder="25"
-                            className="w-full h-14 bg-white border border-slate-200 rounded-xl px-4 focus:ring-2 focus:ring-dark-green outline-none transition"
-                        />
-                    </div>
-
-                    <div className="space-y-4 pt-2">
-                        <label className="text-sm font-bold text-dark-green ml-1 block">Choose Your Goal</label>
-                        <div className="space-y-2">
-                            {['Weight Loss', 'Maintain Weight', 'Muscle Gain'].map((g) => (
-                                <button
-                                    key={g}
-                                    type="button"
-                                    onClick={() => setGoal(g)}
-                                    className={`w-full p-4 rounded-2xl border text-sm font-bold transition-all text-left ${goal === g ? 'bg-dark-green text-white border-dark-green' : 'bg-white text-dark-green border-dark-green'}`}
-                                >
-                                    {g}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                   </div>
-                )}
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-[#1B5E20] ml-1 block">Email Address</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                className="w-full h-14 bg-white border border-gray-300 rounded-2xl px-4 focus:ring-2 focus:ring-[#1B5E20] outline-none transition"
+              />
             </div>
 
-            <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full h-[60px] bg-[#4CAF50] text-white font-bold text-lg rounded-[20px] shadow-lg shadow-green-100 transition transform active:scale-[0.98] flex items-center justify-center gap-2"
-            >
-                {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : (isRegisterSelected ? 'Create Account' : 'Login')}
-            </button>
-        </form>
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-[#1B5E20] ml-1 block">Password</label>
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password"
+                  className="w-full h-14 bg-white border border-gray-300 rounded-2xl px-4 pr-12 focus:ring-2 focus:ring-[#1B5E20] outline-none transition"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showPassword ? <Eye size={24} strokeWidth={1.5} /> : <EyeOff size={24} strokeWidth={1.5} />}
+                </button>
+              </div>
+            </div>
 
-        <p className="text-xs text-center text-gray-400 font-medium pt-8">
-            2026©powered by SIMATS Engineering
+            {isRegisterSelected && (
+              <>
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-[#1B5E20] ml-1 block">Confirm Password</label>
+                  <input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Confirm Password"
+                    className="w-full h-14 bg-white border border-gray-300 rounded-2xl px-4 focus:ring-2 focus:ring-[#1B5E20] outline-none transition"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-[#1B5E20] ml-1 block">Age</label>
+                  <input
+                    type="number"
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
+                    placeholder="25"
+                    className="w-full h-14 bg-white border border-gray-300 rounded-2xl px-4 focus:ring-2 focus:ring-[#1B5E20] outline-none transition"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-[#1B5E20] ml-1 block">Health Goal</label>
+                  <select
+                    value={goal}
+                    onChange={(e) => setGoal(e.target.value)}
+                    className="w-full h-14 bg-white border border-gray-300 rounded-2xl px-4 focus:ring-2 focus:ring-[#1B5E20] outline-none transition appearance-none"
+                  >
+                    <option value="Weight Loss">Weight Loss</option>
+                    <option value="Maintenance">Maintenance</option>
+                    <option value="Muscle Gain">Muscle Gain</option>
+                  </select>
+                </div>
+              </>
+            )}
+
+            {!isRegisterSelected && (
+              <div className="flex justify-end pr-1">
+                <button
+                  type="button"
+                  onClick={() => navigate('/forgot-password')}
+                  className="text-sm text-[#1B5E20] font-medium hover:underline"
+                >
+                  Forgot Password?
+                </button>
+              </div>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full h-16 mt-4 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold text-lg rounded-[24px] shadow-lg transition transform active:scale-[0.98] flex items-center justify-center gap-2"
+          >
+            {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : (isRegisterSelected ? 'Create Account' : 'Login')}
+          </button>
+        </form>
+      </div>
+
+      {/* Footer */}
+      <div className="w-full py-4 mt-auto">
+        <p className="text-xs text-center text-gray-400">
+          2026©powered by Engineering
         </p>
       </div>
     </div>
