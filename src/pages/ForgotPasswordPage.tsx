@@ -20,14 +20,25 @@ const ForgotPasswordPage: React.FC = () => {
     setError('');
     try {
       const response = await authService.forgotPassword(email);
-      if (response.data.message === 'OTP sent to email') {
+      // More flexible check: either status 200 OR a success message
+      if (response.status === 200 || response.data.message === 'OTP sent to email') {
+        console.log('Success! OTP sent. Email:', email);
         // Navigate to the shared OTP verification page with 'forgot' type
         navigate('/verify-otp', { state: { email, type: 'forgot' } });
       } else {
         setError(response.data.message || 'Error sending reset code');
       }
-    } catch (err) {
-      setError('Connection failed. Please check your network.');
+    } catch (err: any) {
+      console.error('API Error:', err);
+      if (err.response) {
+        // The server responded with a non-2xx status code
+        setError(err.response.data.message || err.response.data.error || 'Server Error. Please try again.');
+      } else if (err.request) {
+        // The request was made but no response was received (e.g., timeout)
+        setError('Server is slow to respond. Please check your email in a minute.');
+      } else {
+        setError('Connection failed. Please check your network.');
+      }
     } finally {
       setLoading(false);
     }

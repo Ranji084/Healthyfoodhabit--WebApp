@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { authService } from '../api/services';
 import { Loader2, ShieldCheck, ArrowLeft, RefreshCw } from 'lucide-react';
@@ -12,6 +12,9 @@ const OtpPage: React.FC = () => {
     const [timer, setTimer] = useState(30);
     const [canResend, setCanResend] = useState(false);
 
+    // Refs for input focus management
+    const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
     const navigate = useNavigate();
     const location = useLocation();
     const { email, type } = location.state || {};
@@ -19,6 +22,9 @@ const OtpPage: React.FC = () => {
     useEffect(() => {
         if (!email) {
             navigate('/login');
+        } else {
+            // Auto focus first input on mount
+            setTimeout(() => inputRefs.current[0]?.focus(), 100);
         }
     }, [email, navigate]);
 
@@ -34,24 +40,33 @@ const OtpPage: React.FC = () => {
         return () => clearInterval(interval);
     }, [timer]);
 
-    const handleChange = (element: HTMLInputElement, index: number) => {
-        if (isNaN(Number(element.value))) return false;
+    const handleChange = (value: string, index: number) => {
+        if (isNaN(Number(value))) return;
 
-        setOtp([...otp.map((d, idx) => (idx === index ? element.value : d))]);
+        const newOtp = [...otp];
+        newOtp[index] = value.substring(value.length - 1); // Only take last character
+        setOtp(newOtp);
 
-        // Focus next input
-        if (element.nextSibling && element.value !== '') {
-            (element.nextSibling as HTMLInputElement).focus();
+        // Move to next input if value is entered
+        if (value && index < 5) {
+            inputRefs.current[index + 1]?.focus();
+        }
+    };
+
+    const handlePaste = (e: React.ClipboardEvent) => {
+        e.preventDefault();
+        const data = e.clipboardData.getData('text').trim();
+        if (data.length === 6 && !isNaN(Number(data))) {
+            const pastedOtp = data.split('');
+            setOtp(pastedOtp);
+            inputRefs.current[5]?.focus();
         }
     };
 
     const handleBackspace = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
         if (e.key === 'Backspace') {
-            if (otp[index] === '' && index > 0) {
-                const prevSibling = (e.currentTarget.previousSibling as HTMLInputElement);
-                if (prevSibling) {
-                    prevSibling.focus();
-                }
+            if (!otp[index] && index > 0) {
+                inputRefs.current[index - 1]?.focus();
             }
         }
     };
@@ -67,9 +82,15 @@ const OtpPage: React.FC = () => {
         setIsLoading(true);
         setError('');
         try {
-            console.log('Verifying OTP for:', email, 'type:', type);
+            console.log('Verifying OTP for:', email, 'type:', type, 'OTP:', otpString);
             const response = await authService.verifyOtp(email, otpString);
-            if (response.data.message === 'OTP verified') {
+            
+            // Loosened check: Support status 200 or exact message match
+            const isSuccess = response.status === 200 || 
+                             response.data.message?.toLowerCase().includes('verified') ||
+                             response.data.status === 'success';
+
+            if (isSuccess && response.data.message !== 'Invalid OTP') {
                 if (type === 'forgot') {
                     console.log('Success! Navigating to Reset Password page.');
                     navigate('/reset-password', { state: { email, otp: otpString } });
@@ -80,8 +101,9 @@ const OtpPage: React.FC = () => {
             } else {
                 setError(response.data.message || 'Invalid verification code');
             }
-        } catch (err) {
-            setError('Verification failed. Please try again.');
+        } catch (err: any) {
+            console.error('Verify Error:', err);
+            setError(err.response?.data?.message || 'Verification failed. Please try again.');
         } finally {
             setIsLoading(false);
         }
@@ -91,11 +113,14 @@ const OtpPage: React.FC = () => {
         if (!canResend) return;
         setIsLoading(true);
         try {
+            // NOTE: Resend currently calls forgotPassword which might fail for registration
+            // if the backend expects a different route.
             await authService.forgotPassword(email);
             setTimer(30);
             setCanResend(false);
-            setOtp(['', '', '', '', '', '']); // Clear otp on resend
+            setOtp(['', '', '', '', '', '']); 
             setError('');
+            inputRefs.current[0]?.focus();
         } catch (err) {
             setError('Failed to resend code');
         } finally {
@@ -105,7 +130,6 @@ const OtpPage: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-white flex flex-col items-center p-6 font-sans">
-            {/* Top Logos */}
             <div className="w-full max-w-md flex justify-between items-start pt-4 mb-8">
                 <img src={leftLogo} alt="Left Logo" className="h-16 w-auto object-contain" />
                 <img src={rightLogo} alt="Right Logo" className="h-16 w-auto object-contain" />
@@ -132,17 +156,19 @@ const OtpPage: React.FC = () => {
                 )}
 
                 <form onSubmit={handleVerify} className="w-full space-y-8">
-                    <div className="flex justify-between gap-2 px-2">
+                    <div className="flex justify-between gap-2 px-2" onPaste={handlePaste}>
                         {otp.map((data, index) => (
                             <input
                                 key={index}
+                                ref={el => inputRefs.current[index] = el}
                                 type="text"
+                                inputMode="numeric"
                                 maxLength={1}
                                 value={data}
-                                onChange={e => handleChange(e.target, index)}
+                                onChange={e => handleChange(e.target.value, index)}
                                 onKeyDown={e => handleBackspace(e, index)}
                                 onFocus={e => e.target.select()}
-                                className="w-12 h-11 border border-gray-300 rounded-lg text-center text-xl font-bold text-[#1B5E20] focus:ring-2 focus:ring-[#1B5E20] focus:border-transparent outline-none transition bg-gray-50 uppercase"
+                                className="w-12 h-11 border border-gray-300 rounded-lg text-center text-xl font-bold text-[#1B5E20] focus:ring-2 focus:ring-[#1B5E20] focus:border-transparent outline-none transition bg-gray-50"
                             />
                         ))}
                     </div>
@@ -182,7 +208,6 @@ const OtpPage: React.FC = () => {
                 </button>
             </div>
 
-            {/* Footer */}
             <div className="w-full py-4 mt-auto">
                 <p className="text-xs text-center text-gray-400">
                     2026©powered by Engineering
