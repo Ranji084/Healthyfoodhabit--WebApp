@@ -16,6 +16,7 @@ const WelcomePage: React.FC = () => {
   const [goal, setGoal] = useState('Weight Loss');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
 
   const { login } = useAuth();
@@ -46,13 +47,17 @@ const WelcomePage: React.FC = () => {
         : await authService.login(payload);
 
       if (response.data.status === 'success') {
-        const userData = {
-          user_id: response.data.user_id || response.data.id,
-          name: response.data.name || name,
-          email: email
-        };
-        login(userData);
-        navigate('/');
+        if (isRegisterSelected) {
+          navigate('/verify-otp', { state: { email } });
+        } else {
+          const userData = {
+            user_id: response.data.user_id || response.data.id,
+            name: response.data.name || name,
+            email: email
+          };
+          login(userData);
+          navigate('/');
+        }
       } else {
         setError(response.data.message || 'Authentication failed');
       }
@@ -76,23 +81,23 @@ const WelcomePage: React.FC = () => {
         <h1 className="text-2xl font-bold text-[#1B5E20]">Healthy Food Habit</h1>
 
         {/* Auth Toggle */}
-        <div className="w-full flex bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+        <div className="w-full flex bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
           <button
             onClick={() => setIsRegisterSelected(true)}
-            className={`flex-1 py-4 font-bold transition-all duration-300 ${isRegisterSelected ? 'bg-[#004D40] text-white shadow-md' : 'bg-transparent text-[#1B5E20]'}`}
+            className={`flex-1 py-2.5 font-bold transition-all duration-300 ${isRegisterSelected ? 'bg-[#004D40] text-white shadow-md' : 'bg-transparent text-[#1B5E20]'}`}
           >
             Register
           </button>
           <button
             onClick={() => setIsRegisterSelected(false)}
-            className={`flex-1 py-4 font-bold transition-all duration-300 ${!isRegisterSelected ? 'bg-[#004D40] text-white shadow-md' : 'bg-transparent text-[#1B5E20]'}`}
+            className={`flex-1 py-2.5 font-bold transition-all duration-300 ${!isRegisterSelected ? 'bg-[#004D40] text-white shadow-md' : 'bg-transparent text-[#1B5E20]'}`}
           >
             Login
           </button>
         </div>
 
         {error && (
-          <div className="w-full p-4 bg-red-50 border border-red-100 text-red-600 rounded-2xl text-sm font-medium text-center">
+          <div className="w-full p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl text-sm font-medium text-center">
             {error}
           </div>
         )}
@@ -108,7 +113,7 @@ const WelcomePage: React.FC = () => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Full Name"
-                  className="w-full h-14 bg-white border border-gray-300 rounded-2xl px-4 focus:ring-2 focus:ring-[#1B5E20] outline-none transition"
+                  className="w-full h-11 bg-white border border-gray-300 rounded-xl px-4 focus:ring-2 focus:ring-[#1B5E20] outline-none transition"
                 />
               </div>
             )}
@@ -120,7 +125,7 @@ const WelcomePage: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="w-full h-14 bg-white border border-gray-300 rounded-2xl px-4 focus:ring-2 focus:ring-[#1B5E20] outline-none transition"
+                className="w-full h-11 bg-white border border-gray-300 rounded-xl px-4 focus:ring-2 focus:ring-[#1B5E20] outline-none transition"
               />
             </div>
 
@@ -132,14 +137,14 @@ const WelcomePage: React.FC = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Password"
-                  className="w-full h-14 bg-white border border-gray-300 rounded-2xl px-4 pr-12 focus:ring-2 focus:ring-[#1B5E20] outline-none transition"
+                  className="w-full h-11 bg-white border border-gray-300 rounded-xl px-4 pr-12 focus:ring-2 focus:ring-[#1B5E20] outline-none transition"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  {showPassword ? <Eye size={24} strokeWidth={1.5} /> : <EyeOff size={24} strokeWidth={1.5} />}
+                  {showPassword ? <Eye size={20} strokeWidth={1.5} /> : <EyeOff size={20} strokeWidth={1.5} />}
                 </button>
               </div>
             </div>
@@ -148,13 +153,22 @@ const WelcomePage: React.FC = () => {
               <>
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-[#1B5E20] ml-1 block">Confirm Password</label>
-                  <input
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Confirm Password"
-                    className="w-full h-14 bg-white border border-gray-300 rounded-2xl px-4 focus:ring-2 focus:ring-[#1B5E20] outline-none transition"
-                  />
+                  <div className="relative">
+                    <input
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="Confirm Password"
+                      className="w-full h-11 bg-white border border-gray-300 rounded-xl px-4 pr-12 focus:ring-2 focus:ring-[#1B5E20] outline-none transition"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
+                      {showConfirmPassword ? <Eye size={20} strokeWidth={1.5} /> : <EyeOff size={20} strokeWidth={1.5} />}
+                    </button>
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-[#1B5E20] ml-1 block">Age</label>
@@ -163,7 +177,7 @@ const WelcomePage: React.FC = () => {
                     value={age}
                     onChange={(e) => setAge(e.target.value)}
                     placeholder="25"
-                    className="w-full h-14 bg-white border border-gray-300 rounded-2xl px-4 focus:ring-2 focus:ring-[#1B5E20] outline-none transition"
+                    className="w-full h-11 bg-white border border-gray-300 rounded-xl px-4 focus:ring-2 focus:ring-[#1B5E20] outline-none transition"
                   />
                 </div>
                 <div className="space-y-2">
@@ -171,7 +185,7 @@ const WelcomePage: React.FC = () => {
                   <select
                     value={goal}
                     onChange={(e) => setGoal(e.target.value)}
-                    className="w-full h-14 bg-white border border-gray-300 rounded-2xl px-4 focus:ring-2 focus:ring-[#1B5E20] outline-none transition appearance-none"
+                    className="w-full h-11 bg-white border border-gray-300 rounded-xl px-4 focus:ring-2 focus:ring-[#1B5E20] outline-none transition appearance-none"
                   >
                     <option value="Weight Loss">Weight Loss</option>
                     <option value="Maintenance">Maintenance</option>
@@ -194,13 +208,15 @@ const WelcomePage: React.FC = () => {
             )}
           </div>
 
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full h-16 mt-4 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold text-lg rounded-[24px] shadow-lg transition transform active:scale-[0.98] flex items-center justify-center gap-2"
-          >
-            {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : (isRegisterSelected ? 'Create Account' : 'Login')}
-          </button>
+          <div className="flex justify-center mt-4">
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="px-12 h-10 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold text-sm rounded-lg shadow-md transition transform active:scale-[0.98] flex items-center justify-center gap-2"
+            >
+              {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : (isRegisterSelected ? 'Create Account' : 'Login')}
+            </button>
+          </div>
         </form>
       </div>
 

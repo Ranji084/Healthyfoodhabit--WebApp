@@ -105,28 +105,30 @@ const DashboardPage: React.FC = () => {
                             placeholder="Height (cm)"
                             value={bmiInputs.height}
                             onChange={e => setBmiInputs({...bmiInputs, height: e.target.value})}
-                            className="w-full h-12 bg-white border border-slate-200 rounded-xl px-4 focus:ring-2 focus:ring-dark-green outline-none"
+                            className="w-full h-10 bg-white border border-slate-200 rounded-lg px-4 focus:ring-2 focus:ring-dark-green outline-none"
                         />
                         <input 
                             type="number"
                             placeholder="Weight (kg)"
                             value={bmiInputs.weight}
                             onChange={e => setBmiInputs({...bmiInputs, weight: e.target.value})}
-                            className="w-full h-12 bg-white border border-slate-200 rounded-xl px-4 focus:ring-2 focus:ring-dark-green outline-none"
+                            className="w-full h-10 bg-white border border-slate-200 rounded-lg px-4 focus:ring-2 focus:ring-dark-green outline-none"
                         />
                     </div>
-                    <button type="submit" className="w-full h-12 bg-dark-green text-white font-bold rounded-xl shadow-md transition transform active:scale-95">
-                        Calculate BMI
-                    </button>
+                    <div className="flex justify-center">
+                        <button type="submit" className="px-10 h-10 bg-dark-green text-white font-semibold text-sm rounded-lg shadow-md transition transform active:scale-95">
+                            Calculate BMI
+                        </button>
+                    </div>
                 </form>
             </div>
 
             {/* Quick Actions */}
-            <div className="space-y-4">
-                <Link to="/add-meal" className="w-full h-14 bg-dark-green text-white font-bold rounded-[28px] flex items-center justify-center shadow-lg transition transform active:scale-95">
+            <div className="flex flex-col items-center space-y-4">
+                <Link to="/add-meal" className="px-12 h-10 bg-dark-green text-white font-semibold text-sm rounded-lg flex items-center justify-center shadow-md transition transform active:scale-95">
                     Add Today's Meal
                 </Link>
-                <Link to="/progress" className="w-full h-14 bg-white border-2 border-dark-green text-dark-green font-bold rounded-[28px] flex items-center justify-center transition transform active:scale-95">
+                <Link to="/progress" className="px-12 h-10 bg-white border border-dark-green text-dark-green font-semibold text-sm rounded-lg flex items-center justify-center transition transform active:scale-95">
                     View Insights
                 </Link>
             </div>

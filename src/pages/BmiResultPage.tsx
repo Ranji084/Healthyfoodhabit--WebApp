@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, CheckCircle2, AlertTriangle, Info } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 const BmiResultPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -56,7 +56,7 @@ const BmiResultPage: React.FC = () => {
 
         <button 
             onClick={() => navigate('/')}
-            className="w-full h-14 bg-dark-green text-white font-bold rounded-[28px] shadow-lg active:scale-95 transition"
+            className="w-full h-12 bg-dark-green text-white font-bold rounded-xl shadow-lg active:scale-95 transition"
         >
             Back to Home
         </button>

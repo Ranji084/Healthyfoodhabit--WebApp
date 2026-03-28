@@ -11,6 +11,9 @@ import ProfilePage from './pages/ProfilePage';
 import BmiResultPage from './pages/BmiResultPage';
 import StaticPage from './pages/StaticPage';
 import EditProfilePage from './pages/EditProfilePage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import OtpPage from './pages/OtpPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 
 // Simple Result Screen for Meal Analysis
 const MealResultPage = () => {
@@ -51,6 +54,9 @@ function App() {
         <Routes>
           <Route path="/login" element={<WelcomePage />} />
           <Route path="/register" element={<WelcomePage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/verify-otp" element={<OtpPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
           
           <Route element={<ProtectedRoute />}>
             <Route element={<Layout />}>

@@ -105,9 +105,9 @@ const AddMealPage: React.FC = () => {
         <button
           onClick={handleAddMeal}
           disabled={isLoading || !mealInput.trim()}
-          className="w-full h-14 bg-dark-green text-white font-bold rounded-[28px] shadow-lg flex items-center justify-center gap-2 transition active:scale-95 disabled:opacity-50"
+          className="w-full h-12 bg-dark-green text-white font-bold rounded-xl shadow-lg flex items-center justify-center gap-2 transition active:scale-95 disabled:opacity-50"
         >
-          {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : 'Calculate Nutrients'}
+          {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Calculate Nutrients'}
         </button>
       </div>
     </div>

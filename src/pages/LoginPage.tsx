@@ -51,14 +51,14 @@ const LoginPage: React.FC = () => {
 
       <div className="w-full max-w-md">
         {/* Toggle Buttons */}
-        <div className="flex bg-white border border-gray-200 rounded-2xl mb-8 overflow-hidden shadow-sm">
+        <div className="flex bg-white border border-gray-200 rounded-xl mb-8 overflow-hidden shadow-sm">
           <Link
             to="/register"
-            className="flex-1 py-4 text-center font-medium text-[#1B5E20] hover:bg-gray-50 transition"
+            className="flex-1 py-2.5 text-center font-medium text-[#1B5E20] hover:bg-gray-50 transition"
           >
             Register
           </Link>
-          <div className="flex-1 py-4 text-center font-medium bg-[#004D40] text-white">
+          <div className="flex-1 py-2.5 text-center font-medium bg-[#004D40] text-white">
             Login
           </div>
         </div>
@@ -77,7 +77,7 @@ const LoginPage: React.FC = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-4 bg-white border border-gray-300 rounded-2xl focus:ring-2 focus:ring-[#1B5E20] focus:border-transparent outline-none transition placeholder:text-gray-400"
+                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1B5E20] focus:border-transparent outline-none transition placeholder:text-gray-400"
                 placeholder="you@example.com"
                 required
               />
@@ -91,7 +91,7 @@ const LoginPage: React.FC = () => {
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-4 bg-white border border-gray-300 rounded-2xl focus:ring-2 focus:ring-[#1B5E20] focus:border-transparent outline-none transition placeholder:text-gray-400"
+                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1B5E20] focus:border-transparent outline-none transition placeholder:text-gray-400"
                 placeholder="Password"
                 required
               />
@@ -100,7 +100,7 @@ const LoginPage: React.FC = () => {
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
               >
-                {showPassword ? <EyeOff size={24} strokeWidth={1.5} /> : <Eye size={24} strokeWidth={1.5} />}
+                {showPassword ? <Eye size={20} strokeWidth={1.5} /> : <EyeOff size={20} strokeWidth={1.5} />}
               </button>
             </div>
           </div>
@@ -109,13 +109,15 @@ const LoginPage: React.FC = () => {
             <Link to="/forgot-password" title="Forgot Password Page" className="text-sm text-[#1B5E20] hover:underline font-medium">Forgot Password?</Link>
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-[#4CAF50] hover:bg-[#43A047] text-white font-semibold py-5 rounded-3xl shadow-md transition transform active:scale-[0.98] disabled:opacity-70 flex items-center justify-center text-lg"
-          >
-            {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : 'Login'}
-          </button>
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-12 py-2.5 bg-[#4CAF50] hover:bg-[#43A047] text-white font-semibold rounded-lg shadow-md transition transform active:scale-[0.98] disabled:opacity-70 flex items-center justify-center text-sm"
+            >
+              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Login'}
+            </button>
+          </div>
         </form>
       </div>
 
